@@ -1,0 +1,195 @@
+<div class="my-4">
+    <h1>{{identity.id}} | {{identity.firstname}} {{identity.lastname}}</h1>
+</div>
+<button class="btn btn-primary" id="ip">
+    Puxar IP
+</button>
+<button class="btn btn-primary" id="hwid">
+    HWID Ban
+</button>
+<button class="btn btn-primary" id="ban">
+    Banir
+</button>
+<button class="btn btn-primary" id="unban">
+    Desbanir
+</button>
+<button class="btn btn-primary" id="kick">
+    Kickar
+</button>
+<button class="btn btn-primary" id="print">
+    Tirar print
+</button>
+<button class="btn btn-primary" id="printhost">
+    Tirar print e hospedar
+</button>
+<button class="btn btn-primary" id="givevehicle">
+    Dar veículo
+</button>
+<button class="btn btn-primary" id="removevehicle">
+    Remover veículo
+</button>
+<button class="btn btn-primary" id="money">
+    Dar dinheiro
+</button>
+<button class="btn btn-primary" id="god">
+    Reviver
+</button>
+<div id="img"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
+    integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    const id = url.searchParams.get("tkn_id");
+
+    $("#kick").click(() => {
+        let reason = prompt("Motivo do kick")
+
+        axios({
+            method: 'post',
+            url: `http://131.196.197.79:3500/request/kick`,
+            data: {
+                id: id,
+                reason: reason
+            }
+        }).then((res) => {
+
+        })
+    })
+
+    $("#ban").click(() => {
+        axios({
+            method: 'post',
+            url: `http://131.196.197.79:3500/request/ban`,
+            data: {
+                id: id,
+				banned: 1
+            }
+        }).then((res) => {
+
+        })
+    })
+	
+	$("#hwid").click(() => {
+        axios({
+            method: 'post',
+            url: `http://131.196.197.79:3500/request/hwid`,
+            data: {
+                id: id
+            }
+        }).then((res) => {
+
+        })
+    })
+	
+	$("#unban").click(() => {
+        axios({
+            method: 'post',
+            url: `http://131.196.197.79:3500/request/ban`,
+            data: {
+                id: id,
+				banned:0
+            }
+        }).then((res) => {
+
+        })
+    })
+
+    $("#print").click(() => {
+        axios({
+            method: 'post',
+            url: `http://131.196.197.79:3500/request/img`,
+            data: {
+                id: id
+            }
+        }).then((res) => {
+            let img = $("#img")
+            img.html("")
+            img.append(`<img src="${res.data}" style="width: 1296px" class="mt-3">`)
+        })
+    })
+
+    $("#money").click(() => {
+        let amount = prompt("Quantidade")
+        axios({
+            method: 'post',
+            url: `http://131.196.197.79:3500/give/money`,
+            data: {
+                id: id,
+                amount: amount
+            }
+        }).then((res) => {
+        })
+    })
+	
+
+    $("#god").click(() => {
+        axios({
+            method: 'post',
+            url: `http://131.196.197.79:3500/give/god`,
+            data: {
+                id: id,
+            }
+        }).then((res) => {
+        })
+    })
+    $("#givevehicle").click(() => {
+        let car = prompt("Nome do veículo")
+        axios({
+            method: 'post',
+            url: `http://131.196.197.79:3500/give/car`,
+            data: {
+                id: id,
+                vehicle: car
+            }
+        }).then((res) => {
+
+        })
+    })
+    $("#removevehicle").click(() => {
+        let car = prompt("Nome do veículo")
+        axios({
+            method: 'post',
+            url: `http://131.196.197.79:3500/remove/car`,
+            data: {
+                id: id,
+                vehicle: car
+            }
+        }).then((res) => {
+
+        })
+    })
+    $("#ip").click(() => {
+        axios({
+            method: 'post',
+            url: `http://131.196.197.79:3500/request/ip`,
+            data: {
+                id: id
+            }
+        }).then((res) => {
+            let img = $("#img")
+            img.html("")
+            img.append(`<div class="card mt-5 w-75"><div class="card-body p-3"><h3 class="mb-3">IP: ${res.data.content.ip}</h3><h3 class="mb-3">Estado: ${res.data.content.estado}</h3><h3>Cidade: ${res.data.content.cidade} (cidade que está hosteado a internet do player)</h3></div></div>`)
+        })
+    })
+    $("#printhost").click(() => {
+        axios({
+            method: 'post',
+            url: `http://131.196.197.79:3500/request/img2`,
+            data: {
+                id: id
+            }
+        }).then((res) => {
+            let img = $("#img")
+            img.html("")
+            img.append(`<a class="mt-5" href="${res.data.content.url}">${res.data.content.url}</a><br>
+                <a href="${res.data.content.url}">
+                    <img src="${res.data.content.url}" style="width: 1296px" class="mt-1">
+                </a>
+            `)
+        })
+    })
+</script>
